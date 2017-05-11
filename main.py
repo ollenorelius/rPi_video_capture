@@ -1,12 +1,20 @@
-from picamera import piCamera
+from picamera import PiCamera
 import os
 import datetime as dt
 from time import sleep
+import sys
 
-
-cam = piCamera()
-
+cam = PiCamera()
+folder = sys.argv[1]
 sleep(1)
-for filename in cam.capture_continuous('img{counter:03d}.jpg'):
+
+if not os.path.exists('./%s'%folder):
+    os.makedirs('./%s'%folder)
+
+cam.sensor_mode = 5
+cam.shutter_speed = 10000
+
+for filename in cam.capture_continuous('%s/img{counter:03d}.jpg'%folder,use_video_port=True):
     print('Captured %s' % filename)
-    sleep(1) # wait 5 minutes
+    sleep(0.5)
+    #input()
